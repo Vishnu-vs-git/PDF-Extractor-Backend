@@ -7,7 +7,8 @@ export class UserFactory implements IUserFactory {
    return  new User({
     id:dbModel._id.toString(),
     name : dbModel.name,
-    email : dbModel.email
+    email : dbModel.email,
+    password : dbModel.password
    })
   }
 }

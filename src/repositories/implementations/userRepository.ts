@@ -10,7 +10,8 @@ export class UserRepository implements IUserRepository {
      private _userEntityFactory : IUserFactory
    ){}
 
-   async create(data : User): Promise<User | null> {
+   async create(user : User): Promise<User | null> {
+    const data = user.toPersistence();
        const createdUser = await UserModel.create(data);
        return createdUser?this._userEntityFactory.toEntity(createdUser): null;
    }
