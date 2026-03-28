@@ -1,0 +1,10 @@
+import { PdfController } from "../controllers/pdfController.js";
+import { PdfFactory } from "../factories/implementation/pdfFactory.js";
+import { PdfMapper } from "../mapper/implementation/pdfMapper.js";
+import { PdfRepository } from "../repositories/implementations/pdfRepository.js";
+import { PDFService } from "../services/implementation/pdfService.js";
+const pdfFactory = new PdfFactory();
+const pdfRepository = new PdfRepository(pdfFactory);
+const pdfMapper = new PdfMapper();
+const pdfService = new PDFService(pdfRepository,pdfMapper);
+export const pdfController = new PdfController(pdfService);
