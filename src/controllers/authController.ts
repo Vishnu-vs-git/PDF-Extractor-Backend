@@ -14,6 +14,7 @@ export class AuthController {
   ){}
 
  signup = async(req: Request, res : Response, next:NextFunction) => {
+  
    try{
       await this._userService.signup(req.body);
      res.status(StatusCode.CREATED).json({
@@ -37,6 +38,7 @@ export class AuthController {
  login = async (req: Request, res: Response, next:NextFunction) => {
   try{
       const {user, accessToken,refreshToken} = await this._userService.login(req.body);
+  
       res.cookie(TOKEN_TYPES.ACCESS_TOKEN, accessToken, {
         httpOnly:true,
         secure :true,
