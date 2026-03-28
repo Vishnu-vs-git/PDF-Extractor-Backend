@@ -1,5 +1,6 @@
 
 import { ERROR_MESSAGES } from "../../common/errorMessages.js";
+import { BAD_REQUEST_ERROR, CREATION_FAILED_ERROR, NOT_FOUND_ERROR } from "../../common/errors.js";
 import type { IUserLoginDTO } from "../../dtos/userLoginDTO.js";
 import type { IUserRegisterDTO } from "../../dtos/userRegisterDTO.js";
 import type { IUserResponseDTO } from "../../dtos/userResponseDTO.js";
@@ -19,16 +20,16 @@ export class UserService implements IUserService {
       
    const existingUser = await this._userRepo.findByEmail(dto.email);
    if(existingUser) {
-     throw new Error(ERROR_MESSAGES.USER_EXIST)
+     throw new BAD_REQUEST_ERROR(ERROR_MESSAGES.USER_EXIST)
    }
 
    const hashedPassword = await hashPassword(dto.password);
-   if(!hashedPassword)throw new Error(ERROR_MESSAGES.PASSWORD_HASH_ERROR);
+   if(!hashedPassword)throw new CREATION_FAILED_ERROR(ERROR_MESSAGES.PASSWORD_HASH_ERROR);
     
     const userEntity = this._userMapper.toEntity({...dto,password:hashedPassword});
 
     const createdUserEntity = await this._userRepo.create(userEntity);
-    if(!createdUserEntity)throw new Error(ERROR_MESSAGES.USER_SAVE_ERROR);
+    if(!createdUserEntity)throw new CREATION_FAILED_ERROR(ERROR_MESSAGES.USER_SAVE_ERROR);
 
     return this._userMapper.toResponseDTO(createdUserEntity)
 
@@ -36,9 +37,9 @@ export class UserService implements IUserService {
   async login(dto: IUserLoginDTO): Promise<{user :IUserResponseDTO,accessToken:string,refreshToken:string}> {
       
     const user = await this._userRepo.findByEmail(dto.email);
-     if(!user)throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
+     if(!user)throw new NOT_FOUND_ERROR(ERROR_MESSAGES.USER_NOT_FOUND);
      const isMatch = await comparePassword(dto.password,user.getPassword());
-     if(!isMatch)throw new Error(ERROR_MESSAGES.PASSWORD_INVALID);
+     if(!isMatch)throw new BAD_REQUEST_ERROR(ERROR_MESSAGES.PASSWORD_INVALID);
 
      const accessToken = createAccessToken({id:user.id});
      const refreshToken = createRefreshToken({id:user.id});
