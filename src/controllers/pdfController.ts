@@ -15,6 +15,7 @@ export class PdfController {
   upload = async (req: AuthRequest,res: Response, next :NextFunction) => {
     try{
       const userId = req?.userId;
+       if(!userId)throw new CustomError(ERROR_MESSAGES.USER_ID_REQUIRED,StatusCode.BAD_REQUEST);
      const file = req.file;
      if(!file){
        return res.status(StatusCode.BAD_REQUEST).json({
@@ -30,6 +31,27 @@ export class PdfController {
      })
     }catch(err){
         if (err instanceof CREATION_FAILED_ERROR) {
+               return next(
+                 new CustomError(err.message, StatusCode.INTERNAL_SERVER_ERROR)
+               );
+             }
+       
+             return next(err);
+    }
+  }
+  extractPages = async (req: AuthRequest,res:Response,next:NextFunction) => {
+    try{
+      const userId = req?.userId;
+      if(!userId)throw new CustomError(ERROR_MESSAGES.USER_ID_REQUIRED,StatusCode.BAD_REQUEST);
+       const pdf = await this._pdfService.extractPages(req.body,userId);
+       res.status(StatusCode.OK).json({
+        success :true,
+         message : SUCCESS_MESSAGE.PDF_EXTRACTED_SUCCESS,
+         data:pdf
+       })
+
+    }catch(err){
+       if (err instanceof CREATION_FAILED_ERROR) {
                return next(
                  new CustomError(err.message, StatusCode.INTERNAL_SERVER_ERROR)
                );
