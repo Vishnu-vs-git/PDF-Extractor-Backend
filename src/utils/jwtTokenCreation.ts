@@ -9,5 +9,5 @@ export const createAccessToken = (payload:object) => {
   return jwt.sign(payload, accessTokenSecret,{expiresIn: "1d"})
 }
 export const createRefreshToken = (payload :Object) => {
-  return jwt.sign(payload,accessTokenSecret,{expiresIn:"7d"})
+  return jwt.sign(payload,refreshTokenSecret,{expiresIn:"7d"})
 }

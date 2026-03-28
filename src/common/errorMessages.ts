@@ -11,5 +11,6 @@ export const ERROR_MESSAGES = {
   PDF_CREATION_FAILED:"Failed to create PDF entry in database",
   UPLOAD_TO_CLOUDINARY_FAILED:"Image upload to cloudinary failed",
   NO_FILE_UPLOADED:"No file uploaded",
-  REFRESH_TOKEN_MISSING :"Refresh Token missing"
+  REFRESH_TOKEN_MISSING :"Refresh Token missing",
+  USER_ID_REQUIRED:"User id is required"
 }

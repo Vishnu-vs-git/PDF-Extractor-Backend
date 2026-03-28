@@ -6,6 +6,9 @@ import type { IPdfMapper } from "../../mapper/interface/IPdfMapper.js";
 import { ERROR_MESSAGES } from "../../common/errorMessages.js";
 import { CREATION_FAILED_ERROR } from "../../common/errors.js";
 import type { IPdfResponseDTO } from "../../dtos/pdfResponseDTO.js";
+import type { IPdfExtractionRequestDTO } from "../../dtos/pdfExtractionReqDTO.js";
+import axios from "axios";
+import { PDFDocument } from "pdf-lib";
 
 export class PDFService implements IPdfService {
   constructor(
@@ -28,5 +31,32 @@ async upload(file: Express.Multer.File, userId: string): Promise<IPdfResponseDTO
       throw new CREATION_FAILED_ERROR(ERROR_MESSAGES.PDF_CREATION_FAILED);
     }
     return this._pdfMapper.toResponseDTO(pdf)
+  }
+  async extractPages(dto: IPdfExtractionRequestDTO,userId :string): Promise<IPdfResponseDTO> {
+      const response = await axios.get(dto.pdfUrl,{
+        responseType:"arraybuffer"
+      });
+
+      const existingPdfBytes = response.data;
+
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+      const newPdf = await PDFDocument.create();
+
+      const copiedPages = await newPdf.copyPages(pdfDoc,dto.pages.map(p => p-1));
+      copiedPages.forEach(page => newPdf.addPage(page));
+      const newPdfBytes = await newPdf.save();
+
+      const uploadResult = await uploadToCloudinary(Buffer.from(newPdfBytes));
+
+      const newPdfEntity = this._pdfMapper.toEntity({
+        url: uploadResult.secure_url,
+        publicId: uploadResult.public_id,
+        userId: userId
+      });
+      const savedPdf = await this._pdfRepo.create(newPdfEntity);
+      if(!savedPdf) throw new CREATION_FAILED_ERROR(ERROR_MESSAGES.PDF_CREATION_FAILED);
+
+      return this._pdfMapper.toResponseDTO(savedPdf)
+
   }
 }   
