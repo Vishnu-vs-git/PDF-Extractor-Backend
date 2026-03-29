@@ -4,11 +4,20 @@ import { MongoDbConnect } from "./config/mongoDb.js";
 import pdfRoutes from "../src/routes/pdfRoutes.js"
 import dotenv from "dotenv";
 import { ErrorHandlingMiddleware } from "./middlewares/errorHandlingMiddleware.js";
+import cors from"cors"
 dotenv.config()
 
 const app = express();
-MongoDbConnect.connect()
-app.use(express.json())
+MongoDbConnect.connect();
+app.use(express.json());
+const frontendUrl = process.env.FRONT_END_URL ?? ""
+app.use(
+  cors({
+    origin:[frontendUrl],
+    methods:["GET","POST","PUT","DELETE"],
+    credentials:true
+  })
+)
 app.use("/api/auth",authRoutes);
 app.use("/api/pdf",pdfRoutes);
 const port = process.env.PORT||4002

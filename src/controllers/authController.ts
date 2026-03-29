@@ -6,6 +6,7 @@ import { TOKEN_TYPES } from "../common/tokenTypes.js";
 import dotenv from"dotenv"
 import { BAD_REQUEST_ERROR, CREATION_FAILED_ERROR, NOT_FOUND_ERROR } from "../common/errors.js";
 import { CustomError } from "../common/customError.js";
+import type { AuthRequest } from "../middlewares/authMiddleware.js";
 dotenv.config()
 
 export class AuthController {
@@ -72,5 +73,23 @@ export class AuthController {
 
       return next(err);
   }
+ }
+ logout = async (req: AuthRequest,res:Response, next:NextFunction) => {
+   try{
+       res.clearCookie(TOKEN_TYPES.ACCESS_TOKEN,{
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        
+       })
+       res.clearCookie(TOKEN_TYPES.REFRESH_TOKEN,{
+         httpOnly:true,
+         secure:true,
+         sameSite:"none"
+       })
+       res.status(StatusCode.OK).json({success:true, message:SUCCESS_MESSAGE.USER_LOGOUT});
+   }catch(err){
+      next(err)
+   }
  }
 }
