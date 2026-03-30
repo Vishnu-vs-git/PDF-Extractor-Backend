@@ -6,10 +6,16 @@ export const uploadToCloudinary = (buffer: Buffer): Promise<UploadApiResponse> =
   return new Promise<UploadApiResponse>((resolve,reject) => {
     const stream = cloudinary.uploader.upload_stream({
       resource_type:"raw",
-      folder:"pdf-uploads"
+      folder:"pdf-uploads",
+      format: "pdf",
     },
     (error,result) => {
-      if(error) return reject(error);
+      if(error)  {
+         console.log(error)
+        reject(error)
+        return
+      }
+      console.log("✅ CLOUDINARY SUCCESS");
       resolve(result as UploadApiResponse);
     }
   );

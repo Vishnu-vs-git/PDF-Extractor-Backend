@@ -5,6 +5,7 @@ import type { IUserResponseDTO } from "../../dtos/userResponseDTO.js";
 export interface IUserService {
 
   signup(dto:IUserRegisterDTO):Promise<IUserResponseDTO>;
-  login(dto: IUserLoginDTO): Promise<{user :IUserResponseDTO,accessToken:string,refreshToken:string}>
+  login(dto: IUserLoginDTO): Promise<{user :IUserResponseDTO,accessToken:string,refreshToken:string}>;
+  getUserData(userId: string): Promise<IUserResponseDTO>;
 
 }

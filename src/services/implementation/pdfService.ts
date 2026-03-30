@@ -16,8 +16,9 @@ export class PDFService implements IPdfService {
         private _pdfMapper : IPdfMapper
   ){}
 async upload(file: Express.Multer.File, userId: string): Promise<IPdfResponseDTO> {
-   
+    
  const result:UploadApiResponse = await uploadToCloudinary(file.buffer);
+ 
  if(!result)throw new Error(ERROR_MESSAGES.UPLOAD_TO_CLOUDINARY_FAILED)
   const pdfEntity = this._pdfMapper.toEntity({
      url : result.secure_url,

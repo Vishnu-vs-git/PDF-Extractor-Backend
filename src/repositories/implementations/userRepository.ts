@@ -19,4 +19,8 @@ export class UserRepository implements IUserRepository {
        const fetchedUser = await UserModel.findOne({email});
       return fetchedUser ? this._userEntityFactory.toEntity(fetchedUser): null
    }
+   async findById(userId :string): Promise<User|null> {
+        const fetchedUser = await UserModel.findById(userId);
+        return fetchedUser ? this._userEntityFactory.toEntity(fetchedUser): null
+   }
 }
