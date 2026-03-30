@@ -20,6 +20,7 @@ export class AuthMiddleware{
 )  {
   try{
     const token = req.cookies?.accessToken;
+    
     if(!token){
       return AuthMiddleware.refreshAccessToken(req,res,next)
     }

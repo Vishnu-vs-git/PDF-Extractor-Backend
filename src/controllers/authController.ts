@@ -7,6 +7,7 @@ import dotenv from"dotenv"
 import { BAD_REQUEST_ERROR, CREATION_FAILED_ERROR, NOT_FOUND_ERROR } from "../common/errors.js";
 import { CustomError } from "../common/customError.js";
 import type { AuthRequest } from "../middlewares/authMiddleware.js";
+import { ERROR_MESSAGES } from "../common/errorMessages.js";
 dotenv.config()
 
 export class AuthController {
@@ -15,7 +16,7 @@ export class AuthController {
   ){}
 
  signup = async(req: Request, res : Response, next:NextFunction) => {
-  
+ 
    try{
       await this._userService.signup(req.body);
      res.status(StatusCode.CREATED).json({
@@ -73,6 +74,17 @@ export class AuthController {
 
       return next(err);
   }
+ }
+ getUser = async(req: AuthRequest,res: Response,next:NextFunction) => {
+    try{
+      
+       const userId = req.userId;
+       if(!userId)if(!userId)throw new CustomError(ERROR_MESSAGES.USER_ID_REQUIRED,StatusCode.BAD_REQUEST);
+       const user = await this._userService.getUserData(userId);
+      res.status(StatusCode.OK).json({success:true,message:SUCCESS_MESSAGE.USER_DATA_FETCH_SUCCESS,data: user});    
+    }catch(err){
+
+    }
  }
  logout = async (req: AuthRequest,res:Response, next:NextFunction) => {
    try{

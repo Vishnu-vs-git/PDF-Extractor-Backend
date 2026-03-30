@@ -5,4 +5,7 @@ export class CustomError extends Error {
      this.statusCode = statusCode;
      Object.setPrototypeOf(this, new.target.prototype)
    }
-}
+}  
+
+
+

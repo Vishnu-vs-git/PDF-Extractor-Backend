@@ -4,7 +4,8 @@ import { MongoDbConnect } from "./config/mongoDb.js";
 import pdfRoutes from "../src/routes/pdfRoutes.js"
 import dotenv from "dotenv";
 import { ErrorHandlingMiddleware } from "./middlewares/errorHandlingMiddleware.js";
-import cors from"cors"
+import cors from"cors";
+import cookieParser from "cookie-parser"
 dotenv.config()
 
 const app = express();
@@ -18,10 +19,11 @@ app.use(
     credentials:true
   })
 )
+app.use(cookieParser());
 app.use("/api/auth",authRoutes);
 app.use("/api/pdf",pdfRoutes);
 const port = process.env.PORT||4002
-app.use(ErrorHandlingMiddleware.handleError)
+// app.use(ErrorHandlingMiddleware.handleError)
 app.listen(port,() => {
   console.log("server is running")
 })

@@ -52,4 +52,9 @@ export class UserService implements IUserService {
       refreshToken
      }
   }
+  async getUserData(userId: string): Promise<IUserResponseDTO> {
+      const user = await this._userRepo.findById(userId);
+      if(!user)throw new NOT_FOUND_ERROR(ERROR_MESSAGES.USER_NOT_FOUND);
+    return this._userMapper.toResponseDTO(user)
+  }
 }
