@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use("/api/auth",authRoutes);
 app.use("/api/pdf",pdfRoutes);
 const port = process.env.PORT||4002
-// app.use(ErrorHandlingMiddleware.handleError)
+app.use(ErrorHandlingMiddleware.handleError)
 app.listen(port,() => {
   console.log("server is running")
 })

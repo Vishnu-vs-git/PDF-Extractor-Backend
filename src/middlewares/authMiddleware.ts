@@ -25,16 +25,20 @@ export class AuthMiddleware{
       return AuthMiddleware.refreshAccessToken(req,res,next)
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET as string
-    ) as JwtPayload;
+   try {
+      const decoded = jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET as string
+      ) as JwtPayload;
 
-    if(!decoded || !decoded.id){
-      throw new CustomError(ERROR_MESSAGES.INVALID_OR_EXPIRED,StatusCode.UNAUTHORIZED)
+      req.userId = decoded.id;
+      return next();
+    } catch (err) {
+     
+      return AuthMiddleware.refreshAccessToken(req, res, next);
     }
-    req.userId = decoded.id;
-    next();
+    
+   
   }catch(err){
      next(err)
   }
