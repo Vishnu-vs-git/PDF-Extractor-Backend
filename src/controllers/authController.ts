@@ -83,7 +83,7 @@ export class AuthController {
        const user = await this._userService.getUserData(userId);
       res.status(StatusCode.OK).json({success:true,message:SUCCESS_MESSAGE.USER_DATA_FETCH_SUCCESS,data: user});    
     }catch(err){
-
+       return next(err)
     }
  }
  logout = async (req: AuthRequest,res:Response, next:NextFunction) => {
