@@ -1,7 +1,7 @@
 import express from "express";
-import authRoutes from "../src/routes/authRoutes.js"
+import authRoutes from "./routes/authRoutes.js";
 import { MongoDbConnect } from "./config/mongoDb.js";
-import pdfRoutes from "../src/routes/pdfRoutes.js"
+import pdfRoutes from "./routes/pdfRoutes.js"
 import dotenv from "dotenv";
 import { ErrorHandlingMiddleware } from "./middlewares/errorHandlingMiddleware.js";
 import cors from"cors";
