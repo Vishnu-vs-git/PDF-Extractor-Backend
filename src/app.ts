@@ -14,7 +14,7 @@ app.use(express.json());
 const frontendUrl = process.env.FRONT_END_URL ?? ""
 const corsOptions = {
   origin: frontendUrl,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
 app.use(cors(corsOptions));
