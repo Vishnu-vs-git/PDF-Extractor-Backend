@@ -12,13 +12,13 @@ const app = express();
 MongoDbConnect.connect();
 app.use(express.json());
 const frontendUrl = process.env.FRONT_END_URL ?? ""
-app.use(
-  cors({
-    origin:[frontendUrl],
-    methods:["GET","POST","PUT","DELETE"],
-    credentials:true
-  })
-)
+const corsOptions = {
+  origin: frontendUrl,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(cookieParser());
 app.use("/api/auth",authRoutes);
 app.use("/api/pdf",pdfRoutes);
